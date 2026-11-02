@@ -1,0 +1,15 @@
+{% extends 'onlinecourse/base.html' %}
+{% block title %}Courses{% endblock %}
+{% block content %}
+  <h1 class="h2 mb-4">Available courses</h1>
+  {% for course in course_list %}
+    <article class="card mb-3">
+      <div class="card-body">
+        <h2 class="h5"><a href="{% url 'onlinecourse:course_details' course.pk %}">{{ course.name }}</a></h2>
+        <p class="mb-0">{{ course.description|truncatewords:35 }}</p>
+      </div>
+    </article>
+  {% empty %}
+    <p>No courses have been published yet.</p>
+  {% endfor %}
+{% endblock %}

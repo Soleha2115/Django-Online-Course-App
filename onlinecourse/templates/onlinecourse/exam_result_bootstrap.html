@@ -1,0 +1,39 @@
+{% extends 'onlinecourse/base.html' %}
+{% block title %}Exam result: {{ course.name }}{% endblock %}
+{% block content %}
+  <h1 class="h2">{{ course.name }}</h1>
+  <hr>
+  {% if passed %}
+    <div class="alert alert-success">
+      <h2 class="h4">Congratulations! You passed.</h2>
+      <p class="mb-0">Your score: <strong>{{ grade }} / {{ max_score }}</strong></p>
+    </div>
+  {% else %}
+    <div class="alert alert-danger">
+      <h2 class="h4">You did not pass. Please try again.</h2>
+      <p class="mb-0">Your score: <strong>{{ grade }} / {{ max_score }}</strong></p>
+    </div>
+  {% endif %}
+  <h2 class="h4 mt-4">Exam review</h2>
+  {% for question in course.question_set.all %}
+    <article class="card mb-3">
+      <h3 class="card-header h6">{{ question.question_text }}</h3>
+      <div class="card-body">
+        {% for choice in question.choice_set.all %}
+          <p class="mb-2">
+            {% if choice in selected_choices %}
+              {% if choice.is_correct %}<span class="badge text-bg-success">Your answer (correct)</span>
+              {% else %}<span class="badge text-bg-danger">Your answer (wrong)</span>{% endif %}
+            {% elif choice.is_correct %}
+              <span class="badge text-bg-warning">Correct answer (missed)</span>
+            {% else %}
+              <span class="badge text-bg-light border text-secondary">Not selected</span>
+            {% endif %}
+            {{ choice.choice_text }}
+          </p>
+        {% endfor %}
+      </div>
+    </article>
+  {% endfor %}
+  <a href="{% url 'onlinecourse:course_details' course.pk %}" class="btn btn-secondary mt-2">Back to course</a>
+{% endblock %}
